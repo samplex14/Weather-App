@@ -5,6 +5,7 @@ const apiKey = '1623e094b07eb3104d3b3318b18a03f9';
 const notFoundSection = document.querySelector('.not-found');
 const searchCitySection = document.querySelector('.search-city');
 const weatherInfoSection = document.querySelector('.weather-info');
+const loadingSection = document.querySelector('.loading-section');
 const countryTxt = document.querySelector('.country-txt');
 const tempTxt = document.querySelector('.temp-text');
 const conditionTxt = document.querySelector('.condition-txt');
@@ -70,6 +71,7 @@ function getCurrentDate(){
 // FIX #2: Add try/catch block for error handling
 // ----------------------------------------------------
 async function updateWeatherInfo(city){
+  showDisplaySection(loadingSection);
   try {
     const weatherData = await getFetchData('weather',city);
 
@@ -151,13 +153,14 @@ function updateForecastsItems(weatherData){
 
 function showDisplaySection(section)
 {
-  [weatherInfoSection,searchCitySection,notFoundSection]
-      .forEach(sec => sec.style.display = 'none'); // Changed section to sec to avoid conflict
+  [weatherInfoSection,searchCitySection,notFoundSection,loadingSection]
+      .forEach(sec => sec.style.display = 'none');
 
       section.style.display = 'flex';
 }
 
 async function getWeatherByCoords(lat, lon) {
+  showDisplaySection(loadingSection);
   try {
     const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
     const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;

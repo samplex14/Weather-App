@@ -5,22 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weather App</title>
   <link rel="stylesheet" href="style.css">
- 
 
-  <!-- ✅ Proper Material Symbols import -->
+  <!-- Material Symbols import -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
 <body>
   <div class="main-container">
     <header class="input-container">
-      <input type="text" class="city-input" placeholder="Search City">
-      <button class="location-btn" title="Use My Location">
+      <input type="text" class="city-input" placeholder="Search City" aria-label="City name">
+      <button class="location-btn" title="Use My Location" aria-label="Use my location">
         <span class="material-symbols-outlined">my_location</span>
       </button>
-      <button class="search-btn">
+      <button class="search-btn" aria-label="Search">
         <span class="material-symbols-outlined">search</span>
       </button>
     </header>
+
+    <!-- Loading indicator -->
+    <div class="loading-section section-message" style="display: none;">
+      <div class="loader"></div>
+      <h4 class="regular-txt">Fetching weather data...</h4>
+    </div>
 
     <div class="weather-info" style="display: none;">
       <div class="location-date-container">
@@ -33,7 +38,7 @@
         </h5>
       </div>
       <div class="weather-summary-container">
-        <img src="assets/weather/clouds.svg" class="weather-summary-img">
+        <img src="assets/weather/clouds.svg" class="weather-summary-img" alt="Weather icon">
         <div class="weather-summary-info">
           <h1 class="temp-text">29 °C</h1>
           <h3 class="condition-txt regular-txt">Clouds</h3>
@@ -50,56 +55,39 @@
         <div class="condition-item">
           <span class="material-symbols-outlined">airwave</span>
           <div class="condition-info">
-          <h5 class="regular-txt">Wind Speed</h5>
-          <h5 class="wind-value-txt">2 M/s</h5>
-         </div>
+            <h5 class="regular-txt">Wind Speed</h5>
+            <h5 class="wind-value-txt">2 M/s</h5>
+          </div>
         </div>
       </div>
+      <div class="forecast-items-label">
+        <span class="material-symbols-outlined">calendar_month</span>
+        <h5 class="regular-txt">5-Day Forecast</h5>
+      </div>
       <div class="forecast-item-container">
-        <div class="forecast-item">
-          <h5 class="forecast-item-date regular-txt">30,Oct</h5>
-          <img src="assets/weather/thunderstorm.svg"class="forecast-item-img">
-          <h5 class="forecast-item-temp">29 °C</h5>
-        </div>
-          <div class="forecast-item">
-          <h5 class="forecast-item-date regular-txt">30,Oct</h5>
-          <img src="assets/weather/thunderstorm.svg"class="forecast-item-img">
-          <h5 class="forecast-item-temp">29 °C</h5>
-        </div>
-         <div class="forecast-item">
-          <h5 class="forecast-item-date regular-txt">30,Oct</h5>
-          <img src="assets/weather/thunderstorm.svg"class="forecast-item-img">
-          <h5 class="forecast-item-temp">29 °C</h5>
-        </div>
-         <div class="forecast-item">
-          <h5 class="forecast-item-date regular-txt">30,Oct</h5>
-          <img src="assets/weather/thunderstorm.svg"class="forecast-item-img">
-          <h5 class="forecast-item-temp">29 °C</h5>
-        </div>
       </div>
     </div>
 
     <section class="search-city section-message">
-      <img src="assets/message/search-city.png">
-       <div>
+      <img src="assets/message/search-city.png" alt="Search for a city">
+      <div>
         <h1>Search City</h1>
         <h4 class="regular-txt">
-          Find out the weather Conditions of the city
+          Find out the weather conditions of your city
         </h4>
-
-       </div>
+      </div>
     </section>
-      <section class="not-found section-message" style="display: none;">
-      <img src="assets/message/not-found.png">
-       <div>
-        <h1>Search City</h1>
-        <h4 class="regular-txt">
-          Find out the weather Conditions of the city
-        </h4>
 
-       </div>
+    <section class="not-found section-message" style="display: none;">
+      <img src="assets/message/not-found.png" alt="City not found">
+      <div>
+        <h1>City Not Found</h1>
+        <h4 class="regular-txt">
+          Please check the city name and try again
+        </h4>
+      </div>
     </section>
   </div>
 </body>
- <script src="script.js"></script>
+<script src="script.js"></script>
 </html>
