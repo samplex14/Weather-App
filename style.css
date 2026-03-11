@@ -53,7 +53,7 @@ body::before{
     outline: none;
     font-weight: 500;
     transition: 0.25s border;
-    padding-right:45px ;
+    padding-right: 75px;
 }
 .city-input:focus{
     border: 3px solid rgb(0,0,0,0.15);
@@ -65,6 +65,17 @@ body::before{
 .search-btn{
     position: absolute;
     right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    display: flex;
+    border: none;
+    cursor: pointer;
+
+}
+.location-btn{
+    position: absolute;
+    right: 45px;
     top: 50%;
     transform: translateY(-50%);
     background: none;

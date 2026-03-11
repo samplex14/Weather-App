@@ -1,5 +1,6 @@
 const cityInput = document.querySelector('.city-input');
 const searchBtn = document.querySelector('.search-btn');
+const locationBtn = document.querySelector('.location-btn');
 const apiKey = '1623e094b07eb3104d3b3318b18a03f9';
 const notFoundSection = document.querySelector('.not-found');
 const searchCitySection = document.querySelector('.search-city');
@@ -155,3 +156,72 @@ function showDisplaySection(section)
 
       section.style.display = 'flex';
 }
+
+async function getWeatherByCoords(lat, lon) {
+  try {
+    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+    const weatherResponse = await fetch(weatherUrl);
+    if (!weatherResponse.ok) {
+      throw new Error(`HTTP error! Status: ${weatherResponse.status}`);
+    }
+    const weatherData = await weatherResponse.json();
+
+    const {
+      name: country,
+      main: { temp, humidity },
+      weather: [{ id, main }],
+      wind: { speed }
+    } = weatherData;
+
+    countryTxt.textContent = country;
+    tempTxt.textContent = Math.round(temp) + ' °C';
+    conditionTxt.textContent = main;
+    humidValue.textContent = humidity + '%';
+    windValue.textContent = speed + ' M/s';
+    currentDateTxt.textContent = getCurrentDate();
+    weatherSummaryImg.src = `assets/weather/${getWeatherIcon(id)}`;
+
+    const forecastResponse = await fetch(forecastUrl);
+    if (!forecastResponse.ok) {
+      throw new Error(`HTTP error! Status: ${forecastResponse.status}`);
+    }
+    const forecastsData = await forecastResponse.json();
+
+    const timeTaken = '12:00:00';
+    const todayDate = new Date().toISOString().split('T')[0];
+    forecastItemsContainer.innerHTML = '';
+
+    forecastsData.list.forEach(forecastWeather => {
+      if (forecastWeather.dt_txt.includes(timeTaken) && !forecastWeather.dt_txt.includes(todayDate)) {
+        updateForecastsItems(forecastWeather);
+      }
+    });
+
+    showDisplaySection(weatherInfoSection);
+  } catch (error) {
+    console.error("Failed to fetch weather by coordinates:", error);
+    showDisplaySection(notFoundSection);
+  }
+}
+
+function triggerGeolocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        getWeatherByCoords(latitude, longitude);
+      },
+      () => {
+        showDisplaySection(searchCitySection);
+      }
+    );
+  } else {
+    showDisplaySection(searchCitySection);
+  }
+}
+
+locationBtn.addEventListener('click', triggerGeolocation);
+
+triggerGeolocation();
