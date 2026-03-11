@@ -14,9 +14,10 @@ const weatherSummaryImg = document.querySelector('.weather-summary-img');
 const currentDateTxt = document.querySelector('.current-date-txt');
 const forecastItemsContainer = document.querySelector('.forecast-item-container');
 
+let isLoading = false;
 
 searchBtn.addEventListener('click',() => {
-  if(cityInput.value.trim() !=''){
+  if(cityInput.value.trim() !='' && !isLoading){
     updateWeatherInfo(cityInput.value.trim()); // Use .trim()
     cityInput.value='';
     cityInput.blur();
@@ -24,13 +25,27 @@ searchBtn.addEventListener('click',() => {
 });
 
 cityInput.addEventListener('keydown',(event) => {
-  if(event.key == 'Enter' && cityInput.value.trim()!='' )
+  if(event.key == 'Enter' && cityInput.value.trim()!='' && !isLoading)
   {
     updateWeatherInfo(cityInput.value.trim()); // Use .trim()
     cityInput.value='';
     cityInput.blur();
   }
 });
+
+// Set loading state
+function setLoading(loading) {
+  isLoading = loading;
+  if (loading) {
+    searchBtn.classList.add('loading');
+    searchBtn.disabled = true;
+    locationBtn.disabled = true;
+  } else {
+    searchBtn.classList.remove('loading');
+    searchBtn.disabled = false;
+    locationBtn.disabled = false;
+  }
+}
 
 // ----------------------------------------------------
 // FIX #2: Add status check and throw error on failure
@@ -70,6 +85,7 @@ function getCurrentDate(){
 // FIX #2: Add try/catch block for error handling
 // ----------------------------------------------------
 async function updateWeatherInfo(city){
+  setLoading(true);
   try {
     const weatherData = await getFetchData('weather',city);
 
@@ -80,16 +96,17 @@ async function updateWeatherInfo(city){
       weather:[{id, main }],
       wind: {speed}
     } = weatherData;
-    
+
     // Update current weather display
     countryTxt.textContent = country;
-    tempTxt.textContent = Math.round(temp)+' °C'; 
+    tempTxt.textContent = Math.round(temp)+' °C';
     conditionTxt.textContent = main;
     humidValue.textContent = humidity + '%';
     windValue.textContent = speed + ' M/s';
     currentDateTxt.textContent = getCurrentDate();
     weatherSummaryImg.src = `assets/weather/${getWeatherIcon(id)}`;
-    
+    weatherSummaryImg.alt = main;
+
     // FIX #1: Call updateForecastsInfo with the correct city argument
     await updateForecastsInfo(city);
 
@@ -98,6 +115,8 @@ async function updateWeatherInfo(city){
     console.error("Failed to update weather info:", error);
     // Display the Not Found section on any error (400, 404, or network)
     showDisplaySection(notFoundSection);
+  } finally {
+    setLoading(false);
   }
 }
 
@@ -127,7 +146,7 @@ function updateForecastsItems(weatherData){
   console.log(weatherData);
   const {
     dt_txt:date,
-    weather: [{ id }],
+    weather: [{ id, main }],
     main: { temp }
   } = weatherData
   const  dateTaken = new Date(date)
@@ -139,9 +158,9 @@ function updateForecastsItems(weatherData){
   const dateResult = dateTaken.toLocaleDateString('en-US',dateOption)
 
   const forecastItem = `
-      <div class="forecast-item">
+      <div class="forecast-item" role="listitem">
         <h5 class="forecast-item-date regular-txt">${dateResult}</h5>
-        <img src="assets/weather/${getWeatherIcon(id)}"class="forecast-item-img">
+        <img src="assets/weather/${getWeatherIcon(id)}" class="forecast-item-img" alt="${main}">
         <h5 class="forecast-item-temp">${Math.round(temp)} °C</h5>
       </div>
   `
@@ -158,6 +177,8 @@ function showDisplaySection(section)
 }
 
 async function getWeatherByCoords(lat, lon) {
+  setLoading(true);
+  locationBtn.classList.add('loading');
   try {
     const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
     const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
@@ -182,6 +203,7 @@ async function getWeatherByCoords(lat, lon) {
     windValue.textContent = speed + ' M/s';
     currentDateTxt.textContent = getCurrentDate();
     weatherSummaryImg.src = `assets/weather/${getWeatherIcon(id)}`;
+    weatherSummaryImg.alt = main;
 
     const forecastResponse = await fetch(forecastUrl);
     if (!forecastResponse.ok) {
@@ -203,17 +225,22 @@ async function getWeatherByCoords(lat, lon) {
   } catch (error) {
     console.error("Failed to fetch weather by coordinates:", error);
     showDisplaySection(notFoundSection);
+  } finally {
+    setLoading(false);
+    locationBtn.classList.remove('loading');
   }
 }
 
 function triggerGeolocation() {
   if (navigator.geolocation) {
+    locationBtn.classList.add('loading');
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         getWeatherByCoords(latitude, longitude);
       },
       () => {
+        locationBtn.classList.remove('loading');
         showDisplaySection(searchCitySection);
       }
     );
