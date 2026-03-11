@@ -6,19 +6,12 @@ A real-time weather application built with vanilla JavaScript that fetches live 
 
 ## 📋 Resume Project Description
 
-**Real-Time Weather Application** | HTML5 · CSS3 · JavaScript (ES6+) · OpenWeatherMap API
+**Weather App: Real-Time Weather Dashboard** — *HTML5, CSS3, JavaScript (ES6+), OpenWeatherMap API* &emsp;&emsp;&emsp;&emsp;&emsp; Mar. 2026  
+***Personal Frontend Project*** — *[live](https://samplex14.github.io/Weather-App)*
 
-- Developed a fully client-side weather application using **vanilla JavaScript (ES6+)**, **HTML5**, and **CSS3** — no frameworks or build tools required.
-- Integrated the **OpenWeatherMap REST API** (v2.5) to fetch live current weather and 5-day forecast data, handling both city-name-based searches and coordinate-based lookups via separate API endpoints.
-- Implemented **browser Geolocation API** (`navigator.geolocation.getCurrentPosition`) to automatically detect the user's coordinates on page load and display local weather without any manual input.
-- Built two parallel async data pipelines using the **Fetch API** with `async/await`: one for current conditions (`/weather`) and one for the 5-day forecast (`/forecast`), with HTTP status validation and structured `try/catch` error handling that gracefully falls back to a "Not Found" UI state.
-- Applied **ES6 destructuring** to cleanly extract nested API response fields (`name`, `main.temp`, `main.humidity`, `weather[0].id`, `wind.speed`, `dt_txt`) and displayed them with real-time DOM manipulation via `textContent` and `src` updates.
-- Designed a **weather-icon mapping function** that maps OpenWeatherMap numeric condition IDs (200–804) to custom SVG icons across six weather categories (thunderstorm, drizzle, rain, snow, clear, clouds) using ordered threshold comparisons.
-- Engineered a **forecast filter** that processes the API's 3-hour interval list to isolate one entry per day (noon, `12:00:00`) while excluding the current day's date, producing up to a **5-day outlook** rendered through `insertAdjacentHTML` template literals.
-- Created a **responsive glassmorphism UI** using CSS3 `backdrop-filter: blur()`, `linear-gradient` backgrounds, and `border-radius` on a fixed 390 × 590 px mobile-first container, styled with the Poppins font family and Google's Material Symbols Outlined icon set.
-- Implemented a **unified section-visibility manager** (`showDisplaySection`) that hides all UI panels and reveals only the active one — weather info, initial search prompt, or error state — keeping display logic centralized and free of scattered `display` overrides.
-- Added **dual search triggers** (button click and `Enter` keydown listener) with `trim()` validation to prevent empty queries, and auto-cleared the input field with `blur()` after each search for a polished UX.
-- Styled the **horizontally scrollable forecast strip** with custom `webkit-scrollbar` CSS (height, track color, thumb color, border-radius) and individual forecast cards with a hover transition for interactive feedback.
+- Designed and built a **real-time weather application** integrating the **OpenWeatherMap REST API** (v2.5) for live current conditions and **5-day forecasts**, with coordinate-based lookup via the **browser Geolocation API** that auto-detects the user's location on page load; implemented dual search triggers (button click and **Enter** keydown) with input validation and graceful **not-found error handling**.
+- Engineered **async/await** data pipelines using the **Fetch API** with HTTP status validation, **ES6 destructuring** of nested JSON payloads, and a **weather-icon mapping function** that classifies OpenWeatherMap condition IDs (200–804) across six SVG icon categories alongside a **noon-sampled forecast filter** that excludes the current day to render a clean daily outlook.
+- Crafted a **glassmorphism UI** using CSS3 `backdrop-filter`, `linear-gradient`, and custom `webkit-scrollbar` styling on a mobile-first **390 × 590 px** container, with a centralized **section-visibility manager** toggling three distinct display states and a horizontally scrollable **forecast strip** with hover transitions.
 
 ---
 
